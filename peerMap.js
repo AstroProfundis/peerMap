@@ -10,7 +10,7 @@ function initialize() {
   if(navigator.geolocation){//html5 location supported
     navigator.geolocation.getCurrentPosition(function(position) {
       var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      $.getJSON("http://jsonip.appspot.com?callback=?", function(data){
+      $.getJSON("http://jsonip.appspot.com/?callback=?", function(data){
         $.ajax({
           url: "webInsertLocation.php",
           type: "POST",
