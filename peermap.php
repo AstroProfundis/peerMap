@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+<?php $ip = $_SERVER['REMOTE_ADDR']; ?>
 <html>
+  <input type="text" id="ip" value="<?php echo ($ip); ?>" />
   <head>
     <title>People on the Page</title>
     <style>

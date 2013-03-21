@@ -3,34 +3,34 @@ var ip;
 var allMarkers = [];
 function initialize() {
   var mapOptions = {
-    zoom: 8,
+    zoom: 5,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
   map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+  var tempPos = new google.maps.LatLng(1,100);
+  map.setCenter(tempPos);
   if(navigator.geolocation){//html5 location supported
     navigator.geolocation.getCurrentPosition(function(position) {
       var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      $.getJSON("http://jsonip.appspot.com/?callback=?", function(data){
-        $.ajax({
-          url: "webInsertLocation.php",
-          type: "POST",
-          data: {
-            'ip' : data.ip,
-            'long': pos.lng(),
-            'lat' : pos.lat()
-          },
-        }).done(function(){
-          ip = data.ip;
+      ip = $('#ip').val();
+      $.ajax({
+        url: "webInsertLocation.php",
+        type: "POST",
+        data: {
+               'ip' : ip,
+               'long': pos.lng(),
+               'lat' : pos.lat()
+        },
+      }).done(function(){
           console.log("inserted! cool!");
         });
-      });
       $.ajax({
         url: "webGetAll.php",
         type: "GET",
         dataType: "json"
       }).done(function(data){
-        addMarker(data);
-      });
+          addMarker(data);
+         });
       setInterval(function(){
         console.log("update markers");
         $.ajax({
@@ -38,19 +38,21 @@ function initialize() {
           type: "GET",
           dataType: "json"
         }).done(function(data){
-          addMarker(data);
-        });
-      },3000);
+            addMarker(data);
+           });
+      },5000);
       map.setCenter(pos);
-    });
+  });
   } else{
-    alert("html5 geolocation is not supported by your browser");
+      alert("html5 geolocation is not supported by your browser");
   }
 }
+
 function addMarker(data){
   for(var i = 0; i < allMarkers.length; i++){
     allMarkers[i].setMap(null);
   }
+  allMarkers=[];
   for(var i = 0; i < data.length; i++){
     var object = data[i];
     var pos = new google.maps.LatLng(object.latitude, object.longitude);
